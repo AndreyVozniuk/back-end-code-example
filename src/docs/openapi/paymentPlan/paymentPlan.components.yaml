@@ -1,0 +1,128 @@
+components:
+  schemas:
+    User:
+      type: object
+      required: [_id, email, firstName, lastName, roles, isActivated, isGoogleAuth, isFacebookAuth]
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        isActivated:
+          type: boolean
+        isGoogleAuth:
+          type: boolean
+        isFacebookAuth:
+          type: boolean
+        avatar:
+          type: object
+          properties:
+            base64:
+              type: string
+            contentType:
+              type: string
+        avatarUrl:
+          type: string
+        paymentPlan:
+          type: string
+    ResponseError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: User already exist.
+    ServerError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Unhandled error.
+    UnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: User don`t authorizated in to the system.
+    PaymentPlan:
+      type: object
+      required: [ _id, planName, buttonName, price, amountOfMonitoredProducts, platform, isActive, isUnlimitedListings ]
+      properties:
+        _id:
+          type: string
+        planName:
+          type: string
+        buttonName:
+          type: string
+        price:
+          type: object
+          required: [ monthly, annual ]
+          properties:
+            monthly:
+              type: number
+            annual:
+              type: number
+            compare:
+              type: number
+        amountOfMonitoredProducts:
+          type: number
+        platform:
+          type: string
+        isActive:
+          type: boolean
+        isUnlimitedListings:
+          type: boolean
+        discountBadge:
+          type: object
+          required: [ type, amountOfDiscount, description, badgeDesign ]
+          properties:
+            type:
+              type: string
+            amountOfDiscount:
+              type: number
+            description:
+              type: string
+            badgeDesign:
+              type: string
+        trialPeriod:
+          type: object
+          required: [ price, duration ]
+          properties:
+            price:
+              type: number,
+            duration:
+              type: object
+              required: [ from, to ]
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+        features:
+          type: array
+          items:
+            type: object
+            required: [ name ]
+            properties:
+              name:
+                type: string
+              hint:
+                type: string
+        image:
+          type: object
+          required: [ binary, contentType ]
+          properties:
+            binary:
+              type: string
+            contentType:
+              type: string

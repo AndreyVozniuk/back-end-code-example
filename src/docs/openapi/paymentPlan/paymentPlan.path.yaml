@@ -1,0 +1,251 @@
+paths:
+  /paymentPlan/addPaymentPlan:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Add new payment plan. (Access => All roles, Need valid access token in headers).
+      tags: ['Payment Plan']
+      requestBody:
+        description: Request body of add new payment plan.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentPlan'
+            example:
+              _id: 60e737a544c33d23f8adb521
+              planName: Cool plan
+              buttonName: Cool button
+              price: {
+                monthly: 25,
+                annual: 44
+              }
+              amountOfMonitoredProducts: 25
+              platform: ebay
+              isActive: true
+              isUnlimitedListings: true
+      responses:
+        200:
+          description: Add plan was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  addedPaymentPlan:
+                    $ref: '#components/schemas/PaymentPlan'
+              example:
+                message:  Add plan was successful.
+                addedPaymentPlan:
+                  _id: 60e737a544c33d23f8adb521
+                  planName: Cool plan
+                  buttonName: Cool button
+                  price: {
+                    monthly: 25,
+                    annual: 44
+                  }
+                  amountOfMonitoredProducts: 25
+                  platform: ebay
+                  isActive: true
+                  isUnlimitedListings: true
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /paymentPlan/removePaymentPlan:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: Remove payment plan. (Access => All roles, Need valid access token in headers).
+      tags: ['Payment Plan']
+      requestBody:
+        description: Request body of remove payment plan.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ paymentPlanId ]
+              properties:
+                paymentPlanId:
+                  type: string
+            example:
+              paymentPlanId: 60e737a544c33d23f8adb521
+      responses:
+        200:
+          description:  Remove plan was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  removedPaymentPlan:
+                    $ref: '#components/schemas/PaymentPlan'
+              example:
+                message:  Remove plan was successful.
+                removedPaymentPlan:
+                  _id: 60e737a544c33d23f8adb521
+                  planName: Cool plan
+                  buttonName: Cool button
+                  price: {
+                    monthly: 25,
+                    annual: 44
+                  }
+                  amountOfMonitoredProducts: 25
+                  platform: ebay
+                  isActive: true
+                  isUnlimitedListings: true
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /paymentPlan/editPaymentPlan:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      summary: Edit payment plan. (Access => All roles, Need valid access token in headers).
+      tags: [ 'Payment Plan' ]
+      requestBody:
+        description: Request body of edit payment plan.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                fieldsForUpdate:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                    planName:
+                      type: string
+                    buttonName:
+                      type: string
+                    price:
+                      type: object
+                      required: [ monthly, annual ]
+                      properties:
+                        monthly:
+                          type: number
+                        annual:
+                          type: number
+                        compare:
+                          type: number
+                    amountOfMonitoredProducts:
+                      type: number
+                    platform:
+                      type: string
+                    isActive:
+                      type: boolean
+                    isUnlimitedListings:
+                      type: boolean
+                    discountBadge:
+                      type: object
+                      required: [ type, amountOfDiscount, description, badgeDesign ]
+                      properties:
+                        type:
+                          type: string
+                        amountOfDiscount:
+                          type: number
+                        description:
+                          type: string
+                        badgeDesign:
+                          type: string
+                    trialPeriod:
+                      type: object
+                      required: [ price, duration ]
+                      properties:
+                        price:
+                          type: number,
+                        duration:
+                          type: object
+                          required: [ from, to ]
+                          properties:
+                            from:
+                              type: string
+                            to:
+                              type: string
+                    features:
+                      type: array
+                      items:
+                        type: object
+                        required: [ name ]
+                        properties:
+                          name:
+                            type: string
+                          hint:
+                            type: string
+                    image:
+                      type: object
+                      required: [ binary, contentType ]
+                      properties:
+                        binary:
+                          type: string
+                        contentType:
+                          type: string
+              example:
+                id: 60e737a544c33d23f8adb521
+                fieldsForUpdate: {
+                  planName: new Plan name
+                }
+      responses:
+        200:
+          description: Edit plan was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updatedPaymentPlan:
+                    $ref: '#components/schemas/PaymentPlan'
+              example:
+                message: Edit plan was successful.
+                updatedPaymentPlan:
+                  _id: 60e737a544c33d23f8adb521
+                  planName: new Plan name
+                  buttonName: Cool button
+                  price: {
+                    monthly: 25,
+                    annual: 44
+                  }
+                  amountOfMonitoredProducts: 25
+                  platform: ebay
+                  isActive: true
+                  isUnlimitedListings: true
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'

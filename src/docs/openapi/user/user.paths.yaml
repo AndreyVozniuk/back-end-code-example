@@ -1,0 +1,197 @@
+/user/changePassword:
+  put:
+    security:
+      - bearerAuth: []
+    summary: Change user password. (Access => All roles, Need valid accessToken in headers).
+    tags: ['User']
+    requestBody:
+      description: Request body of change password.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ newPassword, oldPassword ]
+            properties:
+              newPassword:
+                type: string
+              oldPassword:
+                type: string
+            example:
+              newPassword: NewCoolPass
+              oldPassword: OldCoolPass
+    responses:
+      200:
+        description: Change password was successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+            example:
+              message: Change password was successful.
+      400:
+        description: Bussiness logic error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseError'
+      500:
+        description: Server error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerError'
+/user/changeBasicInformation:
+  patch:
+    security:
+      - bearerAuth: []
+    summary: Change user password. (Access => All roles, Need valid accessToken in headers).
+    tags: ['User']
+    requestBody:
+      description: Request body of change basic information.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ firstName, lastName, email, avatar ]
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              email:
+                type: string
+              avatar:
+                type: string
+            example:
+              firstName: Johnny
+              lastName: Doenko
+              email: johnDoe@gmail.com
+              avatar: data:image/jpeg;base64,/9j/dfjsdfjp1me1m12k/23123mxp1...
+    responses:
+      200:
+        description: Change basic information was successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                updatedUser:
+                  $ref: '#components/schemas/User'
+            example:
+              message: Change basic information was successful.
+              user:
+                _id: 60e3223427183635c8129169
+                email: johnDoe@gmail.com
+                firstName: Johnny
+                lastName: Doenko
+                roles:
+                  - USER
+                isActivated: true
+                isGoogleAuth: false
+                isFacebookAuth: false
+      400:
+        description: Bussiness logic error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseError'
+      500:
+        description: Server error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerError'
+/user/addPaymentPlan:
+  post:
+    security:
+      - bearerAuth: [ ]
+    summary: Add payment plan to user. (Access => All roles, Need valid accessToken in headers).
+    tags: [ 'User' ]
+    requestBody:
+      description: Request body of add payment plan.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ paymentPlanId ]
+            properties:
+              paymentPlanId:
+                type: string
+            example:
+              paymentPlanId: 60e737a544c33d23f8adb521
+    responses:
+      200:
+        description: Add payment was successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                userWithPaymentPlan:
+                  type: object
+                  required: [ _id, email, firstName, lastName, roles, isActivated, isGoogleAuth, isFacebookAuth, paymentPlan ]
+                  properties:
+                    _id:
+                      type: string
+                    email:
+                      type: string
+                    firstName:
+                      type: string
+                    lastName:
+                      type: string
+                    roles:
+                      type: array
+                      items:
+                        type: string
+                    isActivated:
+                      type: boolean
+                    isGoogleAuth:
+                      type: boolean
+                    isFacebookAuth:
+                      type: boolean
+                    avatar:
+                      type: object
+                      properties:
+                        base64:
+                          type: string
+                        contentType:
+                          type: string
+                    avatarUrl:
+                      type: string
+                    paymentPlan:
+                      type: string
+              example:
+                message: Change basic information was successful.
+                userWithPaymentPlan:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: false
+                  isFacebookAuth: false
+                  paymentPlan: 60e737a544c33d23f8adb521
+      400:
+        description: Bussiness logic error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponseError'
+      500:
+        description: Server error.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerError'

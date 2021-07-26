@@ -1,0 +1,463 @@
+paths:
+  /auth/registrationByEmail:
+    post:
+      security: []
+      summary: Registration using email and password. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      requestBody:
+        description: Request body of registration by email.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ firstName, lastName, email, password ]
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                firstName: John
+                lastName: Doe
+                email: johnDoe@gmail.com
+                password: heyHoCoolPass
+      responses:
+        201:
+          description: User successfully created. Refresh and access tokens wrote in to the cookies.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RefreshToken=aswrgk123mflgf12r34jj34n; HttpOnly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#components/schemas/User'
+              example:
+                message: User successfully created.
+                user:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: false
+                  isFacebookAuth: false
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/loginByEmail:
+    post:
+      security: []
+      summary: Login using email and password. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      requestBody:
+        description: Request body of registration by email.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ email, password ]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: johnDoe@gmail.com
+                password: heyHoCoolPass
+      responses:
+        200:
+          description: User successfully login. Refresh and access tokens wrote in to the cookies.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RefreshToken=aswrgk123mflgf12r34jj34n; HttpOnly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#components/schemas/User'
+              example:
+                message: User successfully login.
+                user:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: false
+                  isFacebookAuth: false
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/forgotPassword:
+    post:
+      security: []
+      summary: Send link for restore password to user email. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      requestBody:
+        description: Request body of forgot password.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ email ]
+              properties:
+                email:
+                  type: string
+              example:
+                email: johnDoe@gmail.com
+      responses:
+        200:
+          description: Link for restore password successfully sent.
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                  example:
+                    meesage: Link for restore password successfully sent.
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/restorePassword:
+    post:
+      security: []
+      summary: Restore user password. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      requestBody:
+        description: Request body of restore password.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ newPassword, restorePasswordToken ]
+              properties:
+                restorePasswordToken:
+                  type: string
+                newPassword:
+                  type: string
+              example:
+                restorePasswordToken: asf12gsdg2jmpwmnkxp1juh123krj1om1x1jpkc123
+                newPassword: newCoolPass
+      responses:
+        200:
+          description: Restore password was successsful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  meesage: Restore password was successsful.
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/refreshTokens:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Refresh tokens using cookies data. (Access => All roles, Need valid refreshToken in cookies).
+      tags: ['Authorization']
+      responses:
+        200:
+          description: Refresh was successful. New refresh and access token wrote in to the cookies.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RefreshToken=aswrgk123mflgf12r34jj34n; HttpOnly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#components/schemas/User'
+              example:
+                message: Refresh was successful.
+                user:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: false
+                  isFacebookAuth: false
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        401:
+          description: Unauthorized error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/getGoogleAuthLink:
+    get:
+      security: []
+      summary: Return link for auth using Google. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      responses:
+        200:
+          description: Get url for authorization by google was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authUrl:
+                    type: string
+              example:
+                authURL: 'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=https%3A%2F%2Flocalhost%3A5000%2Fapi%2Fauth%2FauthByGoogle&client_id=748090335696-q2fvf10l9841gh5rf96o2vvrfufg1rt0.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/getFacebookAuthLink:
+    get:
+      security: []
+      summary: Return link for auth using Facebook. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      responses:
+        200:
+          description: Get url for authorization by facebook was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authUrl:
+                    type: string
+              example:
+                authURL: 'https://www.facebook.com/v4.0/dialog/oauth?client_id=826762654616157&redirect_uri=https%3A%2F%2Flocalhost%3A5000%2Fapi%2Fauth%2FauthByFacebook&scope=email&response_type=code&auth_type=rerequest&display=popup/'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/activateAccount/{link}:
+    security: []
+    get:
+      summary: Using only on back-end. Activate account using link. After successfull acivation redirect to client url. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      parameters:
+        - in: path
+          name: link
+          schema:
+            type: string
+          required: true
+  /auth/authByGoogle:
+    security: []
+    get:
+      summary: Using only on back-end. Auth using google. After approving access to data by user automatically redirect to this route. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Login/Registration by google was successful. Refresh and Access tokens wrote in to the cookies.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RefreshToken=aswrgk123mflgf12r34jj34n; HttpOnly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#components/schemas/User'
+              example:
+                message: Login/Registration by google was successful.
+                user:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: true
+                  isFacebookAuth: false
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/authByFacebook:
+    security: []
+    get:
+      summary: Using only on back-end. After approving access to data by user automatically redirect to this route. (Access => All roles, No Auth).
+      tags: ['Authorization']
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Login/Registration by facebook was successful. Refresh and Access tokens wrote in to the cookies.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: RefreshToken=aswrgk123mflgf12r34jj34n; HttpOnly.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#components/schemas/User'
+              example:
+                message: Login/Registration by facebook was successful.
+                user:
+                  _id: 60e3223427183635c8129169
+                  email: johnDoe@gmail.com
+                  firstName: John
+                  lastName: Doe
+                  roles:
+                    - USER
+                  isActivated: true
+                  isGoogleAuth: false
+                  isFacebookAuth: true
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+  /auth/logout:
+    security: []
+    delete:
+      summary: Logout user and remove refreshToken and accessToken from cookies. (Access => All roles, Need Auth).
+      tags: [ 'Authorization' ]
+      responses:
+        200:
+          description: Logout was successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                  message: Logout was successful.
+        400:
+          description: Bussiness logic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+        500:
+          description: Server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerError'
+
+

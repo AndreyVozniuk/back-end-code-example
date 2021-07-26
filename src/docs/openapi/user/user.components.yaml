@@ -1,0 +1,49 @@
+components:
+  schemas:
+    User:
+      type: object
+      required: [ _id, email, firstName, lastName, roles, isActivated, isGoogleAuth, isFacebookAuth ]
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        isActivated:
+          type: boolean
+        isGoogleAuth:
+          type: boolean
+        isFacebookAuth:
+          type: boolean
+        avatar:
+          type: object
+          properties:
+            base64:
+              type: string
+            contentType:
+              type: string
+        avatarUrl:
+          type: string
+        paymentPlan:
+          type: string
+    ResponseError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: User already exist.
+    ServerError:
+      type: object
+      properties:
+        message:
+          type: string
+      example:
+        message: Unhandled error.
